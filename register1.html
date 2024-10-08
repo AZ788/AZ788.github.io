@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Usuario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+        .register-container h2 {
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        .register-container input[type="text"], 
+        .register-container input[type="email"], 
+        .register-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .register-container input[type="text"]:focus,
+        .register-container input[type="email"]:focus,
+        .register-container input[type="password"]:focus {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+        .register-container label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .register-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .register-container button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .register-container button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .register-container .login-button {
+            background-color: #6c757d;
+            margin-top: 15px;
+        }
+        .register-container .login-button:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Registro de Usuario</h2>
+        <form action="register1.php" method="POST">
+            <input type="text" placeholder="Nombre de Usuario" name="user" required>
+            <input type="email" placeholder="Email" name="mail" required>
+            <input type="password" placeholder="Password" name="password" required>
+            <input type="password" placeholder="Repita Password" name="r_password" required>
+            <label>
+                <input type="checkbox" id="terms" name="terms" required>
+                De acuerdo
+            </label>
+            <button type="submit">Registrar</button>
+        </form>
+        <button class="login-button" onclick="window.location.href='login.html'">Ya tengo una cuenta</button>
+    </div>
+</body>
+</html>

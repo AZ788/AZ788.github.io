@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráfica de Temperatura: Termocupla vs PT100</title>
+    <style>
+        .highcharts-title {
+            font-family: 'Playfair Display', sans-serif;
+            font-size: 24px;
+            color: #c40e0e;
+            text-shadow: 1px 1px 2px #b43c3c;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+</head>
+<body>
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+        <p class="highcharts-description">
+            Lectura de Termocupla max6675 y PT100.
+        </p>
+    </figure>
+
+    <script type="text/javascript">
+        const defaultData = 'api.php'; // URL del archivo PHP que devuelve datos JSON
+
+        function createChart() {
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'areaspline'
+                },
+                title: {
+                    text: 'Termocupla vs PT100',
+                    style: {
+                        fontFamily: 'Playfair Display, sans-serif',
+                        fontSize: '24px',
+                        color: '#1f618d',
+                        textShadow: '1px 1px 2px #aaa'
+                    }
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true,
+                        minAnnounceInterval: 15000,
+                        announcementFormatter: function (allSeries, newSeries, newPoint) {
+                            if (newPoint) {
+                                return 'New point added. Value: ' + newPoint.y;
+                            }
+                            return false;
+                        }
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        var date = new Date(this.x);
+                    return `<b>${this.series.name}</b><br/>${date.toLocaleDateString()} ${date.toLocaleTimeString()}<br/>${this.y}°C`;
+                    }
+                },
+                plotOptions: {
+                    areaspline: {
+                        color: '#32CD32',
+                        fillColor: {
+                            linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                            stops: [
+                                [0, '#32CD32'],
+                                [1, '#32CD3200']
+                            ]
+                        },
+                        threshold: null,
+                        marker: {
+                            lineWidth: 1,
+                            lineColor: null,
+                            fillColor: 'white'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: 'Termocupla',
+                        data: [],
+                        color: 'rgba(95, 218, 147, 1)',
+                        fillColor: {
+                            linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                            stops: [
+                                [0, 'rgba(95, 218, 147, 0.2)'],
+                                [1, 'rgba(95, 218, 147, 0)']
+                            ]
+                        },
+                        showInLegend: true
+                    }, 
+                    {
+                        name: 'PT100',
+                        data: [],
+                        color: 'rgba(255, 87, 51, 1)',
+                        fillColor: {
+                            linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                            stops: [
+                                [0, 'rgba(255, 87, 51, 0.2)'],
+                                [1, 'rgba(255, 87, 51, 0)']
+                            ]
+                        },
+                        showInLegend: true
+                    }
+                ],
+                xAxis: {
+                    type: 'datetime', 
+                    title: {
+                        text: 'Tiempo'
+                    },
+                    labels: {
+                        format: '{value:%Y-%m-%d %H:%M:%S}' 
+                    },
+                    tickInterval: 1000 * 60 * 60, 
+                    maxLabels: 6
+                },
+                yAxis: {
+                    title: {
+                        text: 'Temperatura (°C)' 
+                    },
+                    max: 250, 
+                    labels: {
+                        formatter: function() {
+                            return this.value + '°C'; 
+                        }
+                    }
+                }
+            });
+
+            function updateChart() {
+                fetch(defaultData)
+                    .then(response => response.json())
+                    .then(data => {
+                        const chart = Highcharts.charts[0];
+
+                        const serieData = data.map(item => [Date.parse(item.Fecha), parseFloat(item.Serie)]);
+                        const temperaturaData = data.map(item => [Date.parse(item.Fecha), parseFloat(item.Temperatura)]);
+
+                        const limitedSerieData = serieData.slice(-10);
+                        const limitedTemperaturaData = temperaturaData.slice(-10);
+
+                        chart.series[0].setData(limitedSerieData);
+                        chart.series[1].setData(limitedTemperaturaData);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            setInterval(updateChart, 5000);
+
+            updateChart();
+        }
+
+        createChart();
+    </script>
+</body>
+</html>

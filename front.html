@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Temperaturas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilos.css"> <!-- Enlace al archivo CSS para estilos personalizados -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Para los iconos -->
+    <style>
+        .user-info {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .user-info .tooltip {
+            display: none;
+            width: 200px;
+            background-color: #fff;
+            color: #333;
+            text-align: left;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            margin-left: -100px;
+        }
+        .user-info:hover .tooltip {
+            display: block;
+        }
+        iframe {
+            margin-bottom: 30px;
+        }
+        h3 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+        .container {
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <?php
+    session_start();
+    if (isset($_SESSION['user_id'])) {
+        $userId = htmlspecialchars($_SESSION['user_id']);
+    } else {
+        header('Location: login.html'); // Redirigir si no hay sesión activa
+        exit;
+    }
+    ?>
+
+    <!-- Cabecera -->
+    <header>
+        <div class="container">
+            <h1>Monitor de Temperaturas</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Gráfica</a></li>
+                    <li><a href="#">Información</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+            <div class="user-info" id="user-info">
+                <i class="fas fa-user"></i>
+                <span class="user-name">
+                    <?php echo "Bienvenido, $userId"; ?>
+                </span>
+                <div class="tooltip" id="tooltip">
+                    <?php echo "ID de Usuario: $userId"; ?>
+                </div>
+            </div>
+            <div class="logout">
+                <a href="logout.php">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <main>
+        <section class="intro">
+            <div class="container">
+                <h2>Comparación de Termocupla y PT100</h2>
+                <p>Visualización de datos en tiempo real para el monitoreo de temperatura usando una Termocupla max6675 y PT100.</p>
+            </div>
+        </section>
+
+        <!-- Gráficas cargadas mediante iframes -->
+        <section class="grafica">
+            <div class="container">
+                <iframe src="prgr.html" style="width: 100%; height: 500px; border: none;"></iframe> <!-- Integra el gráfico existente -->
+            </div>
+            <div class="container">
+                <h3>Gráfica de Temperatura: Termocupla</h3>
+                <iframe src="termocupla.html" style="width: 100%; height: 500px; border: none;"></iframe>
+            </div>
+            <div class="container">
+                <h3>Gráfica de Temperatura: PT100</h3>
+                <iframe src="pt100.html" style="width: 100%; height: 500px; border: none;"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Monitor de Temperaturas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
